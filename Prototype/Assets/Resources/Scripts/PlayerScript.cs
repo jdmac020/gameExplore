@@ -14,7 +14,7 @@ public class PlayerScript : MonoBehaviour
     {
         _rigidBody = GetComponent<Rigidbody2D>();
         _newPortals = GameObject.FindGameObjectsWithTag("NewPortal");
-        HideThemNewPortals();
+        //HideThemNewPortals();
     }
 
     // Update is called once per frame
@@ -32,21 +32,11 @@ public class PlayerScript : MonoBehaviour
     {
         var gameObj = collision.gameObject;
 
-        if (gameObj.CompareTag("Portal"))
+        if (gameObj.layer == 9)
         {
             gameObj.SetActive(false);
             _portalTouched++;
-        }
-
-        if (gameObj.CompareTag("NewPortal"))
-        {
-            gameObj.SetActive(false);
-            _portalTouched++;
-        }
-
-        if (_portalTouched == 3)
-        {
-            SpawnThemNewPortals();
+            SwitchOnPortal(_portalTouched + 3);
         }
     }
 
@@ -58,12 +48,14 @@ public class PlayerScript : MonoBehaviour
         }
     }
 
-    private void SpawnThemNewPortals()
+    private void SwitchOnPortal(int tagNumber)
     {
-        foreach (var portal in _newPortals)
-        {
-            portal.SetActive(true);
-        }
+        var tagToFind = $"Level{tagNumber}";
+        var portalToFlip = GameObject.FindGameObjectWithTag(tagToFind);
+        var portalAnimator = portalToFlip.GetComponent<Animator>();
+
+        portalAnimator.runtimeAnimatorController = (RuntimeAnimatorController)Instantiate(Resources.Load("Animation/Portal", typeof(RuntimeAnimatorController)));
+
     }
 
 }

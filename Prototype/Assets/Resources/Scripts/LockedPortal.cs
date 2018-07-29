@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class VanishingBarrel : MonoBehaviour {
+public class LockedPortal : MonoBehaviour {
+
+    public bool IsLocked;
 
 	// Use this for initialization
 	void Start () {
