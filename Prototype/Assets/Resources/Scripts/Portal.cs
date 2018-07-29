@@ -30,22 +30,22 @@ public class Portal : MonoBehaviour
         {
             switch (_portal.tag)
             {
-                case "Portal1":
+                case "Level1":
                     DialogueText = PortalOneDialogueText;
                     break;
-                case "Portal2":
+                case "Level2":
                     DialogueText = PortalTwoDialogueText;
                     break;
-                case "Portal3":
+                case "Level3":
                     DialogueText = PortalThreeDialogueText;
                     break;
-                case "Portal4":
+                case "Level4":
                     DialogueText = PortalFourDialogueText;
                     break;
-                case "Portal5":
+                case "Level5":
                     DialogueText = PortalFiveDialogueText;
                     break;
-                case "Portal6":
+                case "Level6":
                     DialogueText = PortalSixDialogueText;
                     break;
                 default:

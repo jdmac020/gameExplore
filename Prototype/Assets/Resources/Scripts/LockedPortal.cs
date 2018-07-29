@@ -11,9 +11,10 @@ public class LockedPortal : Portal
 	// Use this for initialization
 	protected override void Start ()
     {
+        IsLocked = true;
         base.Start();
         _animator = _portal.GetComponent<Animator>();
-        IsLocked = true;
+        
 	}
     
 	// Update is called once per frame
