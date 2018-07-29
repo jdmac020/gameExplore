@@ -11,8 +11,6 @@ public class PlayerScript : MonoBehaviour
     private Rigidbody2D _rigidBody;
     private int _portalTouched = 0;
 
-    private bool IsPaused = false;
-
     // Use this for initialization
     void Start()
     {
@@ -27,7 +25,7 @@ public class PlayerScript : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-        while (!IsPaused)
+        while (!SceneMap.IsPaused)
         {
             var moveHorizontal = Input.GetAxis("Horizontal");
             var moveVertical = Input.GetAxis("Vertical");
@@ -44,21 +42,14 @@ public class PlayerScript : MonoBehaviour
 
         if (gameObj.layer == 9)
         {
-            IsPaused = true;
-
             var displayText = gameObj.GetComponent<Portal>().DialogueText;
             //trigger dialogue
             ActivateConfirmBox(displayText);
-            
+
             _portalTouched = GetTagNumber(gameObj.tag);
             // will happen after successful completion, in the live run
             if (_portalTouched < 4)
                 SwitchOnPortal(_portalTouched);
-
-            if (!_confirmPanel.activeSelf)
-            {
-                IsPaused = false;
-            }
         }
     }
 
