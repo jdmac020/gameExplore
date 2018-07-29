@@ -25,6 +25,7 @@ public class ConfirmBox : MonoBehaviour
 
     public void ActivateConfirmBox(string boxText)
     {
+        SceneMap.IsPaused = true;
         _textBox.ChangeText(boxText);
         _panel.SetActive(true);
     }
@@ -32,6 +33,7 @@ public class ConfirmBox : MonoBehaviour
     public void DeactivateConfirmBox()
     {
         _panel.SetActive(false);
+        SceneMap.IsPaused = false;
     }
 	
 	// Update is called once per frame
