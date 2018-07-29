@@ -7,13 +7,11 @@ public class PlayerScript : MonoBehaviour
 
     private Rigidbody2D _rigidBody;
     private int _portalTouched = 0;
-    private GameObject[] _newPortals;
 
     // Use this for initialization
     void Start()
     {
         _rigidBody = GetComponent<Rigidbody2D>();
-        _newPortals = GameObject.FindGameObjectsWithTag("NewPortal");
         //HideThemNewPortals();
     }
 
@@ -34,28 +32,20 @@ public class PlayerScript : MonoBehaviour
 
         if (gameObj.layer == 9)
         {
-            gameObj.SetActive(false);
-            _portalTouched++;
-            SwitchOnPortal(_portalTouched + 3);
-        }
-    }
+            //trigger dialogue
 
-    private void HideThemNewPortals()
-    {
-        foreach (var portal in _newPortals)
-        {
-            portal.SetActive(false);
+            _portalTouched++;
+            // will happen after successful completion, in the live run
+            SwitchOnPortal(_portalTouched);
         }
     }
 
     private void SwitchOnPortal(int tagNumber)
     {
-        var tagToFind = $"Level{tagNumber}";
-        var portalToFlip = GameObject.FindGameObjectWithTag(tagToFind);
-        var portalAnimator = portalToFlip.GetComponent<Animator>();
-
-        portalAnimator.runtimeAnimatorController = (RuntimeAnimatorController)Instantiate(Resources.Load("Animation/Portal", typeof(RuntimeAnimatorController)));
-
+        var portalTag = $"Portal{tagNumber}";
+        var portalToFlip = GameObject.FindGameObjectWithTag(portalTag);
+        var script = portalToFlip.GetComponent<LockedPortal>();
+        script.Unlock();
     }
 
 }
