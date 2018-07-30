@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -9,23 +10,18 @@ public class ConfirmBox : MonoBehaviour
     private GameObject _panel;
     private TextManager _textBox;
 
-	// Use this for initialization
-	void Start ()
-    {
-        //_panel = gameObject;
-        //_textBox = _panel.GetComponent<Text>();
-
-    }
-
     public void InitializeThePanel()
     {
         _panel = gameObject;
-        _textBox = FindObjectOfType<TextManager>();
+        var textBoxOptions = FindObjectsOfType<Text>();
+        var textBox = textBoxOptions.Where(t => t.tag == _panel.tag).FirstOrDefault();
+        _textBox = textBox.GetComponent<TextManager>();
     }
 
     public void ActivateConfirmBox(string boxText)
     {
-        SceneMap.IsPaused = true;
+        Debug.Log("Inside ConfirmBox Class: " + boxText);
+        SceneManager.UpdatePause(true);
         _textBox.ChangeText(boxText);
         _panel.SetActive(true);
     }
@@ -33,11 +29,6 @@ public class ConfirmBox : MonoBehaviour
     public void DeactivateConfirmBox()
     {
         _panel.SetActive(false);
-        SceneMap.IsPaused = false;
+        SceneManager.UpdatePause(false);
     }
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
 }

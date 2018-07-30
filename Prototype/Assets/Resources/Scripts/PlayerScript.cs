@@ -1,12 +1,16 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 using System;
+using System.Linq;
 
 public class PlayerScript : MonoBehaviour
 {
     public float Speed;
 
     private GameObject _confirmPanel;
+    private GameObject _lockedPanel;
+    private ConfirmBox _lockedBox;
     private ConfirmBox _confirmBox;
     private Rigidbody2D _rigidBody;
     private int _portalTouched = 0;
@@ -15,17 +19,26 @@ public class PlayerScript : MonoBehaviour
     void Start()
     {
         _rigidBody = GetComponent<Rigidbody2D>();
-        _confirmPanel = GameObject.FindGameObjectWithTag("ConfirmPanel");
+
+        var _confirmPanels = GameObject.FindGameObjectsWithTag("ConfirmPanel");
+        _confirmPanel = _confirmPanels.Where(cp => cp.name == "ConfirmPanel").FirstOrDefault();
         _confirmBox = _confirmPanel.GetComponent<ConfirmBox>();
         _confirmBox.InitializeThePanel();
         _confirmBox.DeactivateConfirmBox();
-        //HideThemNewPortals();
+
+        var _lockedPanels = GameObject.FindGameObjectsWithTag("LockedPanel");
+        _lockedPanel = _lockedPanels.Where(lp => lp.name == "LockedPanel").FirstOrDefault();
+        _lockedBox = _lockedPanel.GetComponent<ConfirmBox>();
+        _lockedBox.InitializeThePanel();
+        _lockedBox.DeactivateConfirmBox();
     }
 
     // Update is called once per frame
     void FixedUpdate()
     {
-        while (!SceneMap.IsPaused)
+        var isPaused = SceneManager.IsPaused;
+
+        if (!isPaused)
         {
             var moveHorizontal = Input.GetAxis("Horizontal");
             var moveVertical = Input.GetAxis("Vertical");
@@ -34,6 +47,8 @@ public class PlayerScript : MonoBehaviour
 
             _rigidBody.AddForce(movement * Speed);
         }
+
+        SceneManager.CheckPause();
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -43,8 +58,9 @@ public class PlayerScript : MonoBehaviour
         if (gameObj.layer == 9)
         {
             var displayText = gameObj.GetComponent<Portal>().DialogueText;
+            var isLocked = gameObj.GetComponent<Portal>().IsLocked;
             //trigger dialogue
-            ActivateConfirmBox(displayText);
+            ActivateConfirmBox(displayText, isLocked);
 
             _portalTouched = GetTagNumber(gameObj.tag);
             // will happen after successful completion, in the live run
@@ -60,9 +76,18 @@ public class PlayerScript : MonoBehaviour
         return portalScript.DialogueText;
     }
 
-    private void ActivateConfirmBox(string displayText)
+    private void ActivateConfirmBox(string displayText, bool isLocked)
     {
-        _confirmBox.ActivateConfirmBox(displayText);
+        if (isLocked)
+        {
+            Debug.Log("Under Is Locked: " + displayText);
+            _lockedBox.ActivateConfirmBox(displayText);
+        }
+        else
+        {
+            Debug.Log("Under Not Locked: " + displayText);
+            _confirmBox.ActivateConfirmBox(displayText);
+        }
     }
 
     private void SwitchOnPortal(int tagNumber)

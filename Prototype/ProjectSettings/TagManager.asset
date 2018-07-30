@@ -13,6 +13,7 @@ TagManager:
   - Level5
   - Level6
   - ConfirmPanel
+  - LockedPanel
   layers:
   - Default
   - TransparentFX

@@ -12,14 +12,10 @@ public class TextManager : MonoBehaviour {
         _textBox = GetComponent<Text>(); 
         _textBox.text = string.Empty;
 	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
 
     public void ChangeText(string textToUse)
     {
+
         _textBox.text = textToUse;
     }
 }
