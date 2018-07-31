@@ -4,23 +4,28 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-public class SceneManager : MonoBehaviour {
+public class SceneManagerScript : MonoBehaviour {
 
     public static bool IsPaused;
 
 	// Use this for initialization
 	void Start ()
     {
-        IsPaused = EmptyScript.Instance.Paused;
+        IsPaused = SceneValues.Instance.Paused;
 	}
 
     public static void CheckPause()
     {
-        IsPaused = EmptyScript.Instance.Paused;
+        IsPaused = SceneValues.Instance.Paused;
     }
 
     public static void UpdatePause(bool pauseStatus)
     {
-        EmptyScript.Instance.Paused = pauseStatus;
+        SceneValues.Instance.Paused = pauseStatus;
+    }
+
+    public static void StartScene1()
+    {
+        SceneManager.LoadScene(1);
     }
 }

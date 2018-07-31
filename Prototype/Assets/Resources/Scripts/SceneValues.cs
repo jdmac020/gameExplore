@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SceneControl : MonoBehaviour {
+public class SceneValues : MonoBehaviour {
 
-    public static SceneControl Instance { get; private set; }
+    public static SceneValues Instance { get; private set; }
 
-    public bool IsPaused;
+    public bool Paused;
 
     private void Awake()
     {
@@ -20,6 +20,4 @@ public class SceneControl : MonoBehaviour {
             Destroy(gameObject);
         }
     }
-
-    
 }

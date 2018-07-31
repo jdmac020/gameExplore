@@ -36,7 +36,7 @@ public class PlayerScript : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-        var isPaused = SceneManager.IsPaused;
+        var isPaused = SceneManagerScript.IsPaused;
 
         if (!isPaused)
         {
@@ -48,7 +48,7 @@ public class PlayerScript : MonoBehaviour
             _rigidBody.AddForce(movement * Speed);
         }
 
-        SceneManager.CheckPause();
+        SceneManagerScript.CheckPause();
     }
 
     private void OnTriggerEnter2D(Collider2D collision)

@@ -20,8 +20,7 @@ public class ConfirmBox : MonoBehaviour
 
     public void ActivateConfirmBox(string boxText)
     {
-        Debug.Log("Inside ConfirmBox Class: " + boxText);
-        SceneManager.UpdatePause(true);
+        SceneManagerScript.UpdatePause(true);
         _textBox.ChangeText(boxText);
         _panel.SetActive(true);
     }
@@ -29,6 +28,11 @@ public class ConfirmBox : MonoBehaviour
     public void DeactivateConfirmBox()
     {
         _panel.SetActive(false);
-        SceneManager.UpdatePause(false);
+        SceneManagerScript.UpdatePause(false);
+    }
+
+    public void EnterChallenge1()
+    {
+        SceneManagerScript.StartScene1();
     }
 }
