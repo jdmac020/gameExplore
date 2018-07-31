@@ -80,12 +80,10 @@ public class PlayerScript : MonoBehaviour
     {
         if (isLocked)
         {
-            Debug.Log("Under Is Locked: " + displayText);
             _lockedBox.ActivateConfirmBox(displayText);
         }
         else
         {
-            Debug.Log("Under Not Locked: " + displayText);
             _confirmBox.ActivateConfirmBox(displayText);
         }
     }
