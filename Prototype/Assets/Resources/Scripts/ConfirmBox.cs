@@ -10,6 +10,9 @@ public class ConfirmBox : MonoBehaviour
     private GameObject _panel;
     private TextManager _textBox;
 
+    private string _worldNumber;
+    private string _levelNumber;
+
     public void InitializeThePanel()
     {
         _panel = gameObject;
@@ -18,9 +21,11 @@ public class ConfirmBox : MonoBehaviour
         _textBox = textBox.GetComponent<TextManager>();
     }
 
-    public void ActivateConfirmBox(string boxText)
+    public void ActivateConfirmBox(string boxText, string worldNumber = "", string levelNumber = "")
     {
         SceneManagerScript.UpdatePause(true);
+        _worldNumber = worldNumber;
+        _levelNumber = levelNumber;
         _textBox.ChangeText(boxText);
         _panel.SetActive(true);
     }
@@ -31,14 +36,14 @@ public class ConfirmBox : MonoBehaviour
         SceneManagerScript.UpdatePause(false);
     }
 
-    public void EnterChallenge1()
+    public void EnterLevel()
     {
         SceneManagerScript.UpdatePause(false);
-        SceneManagerScript.StartScene1();
+        SceneManagerScript.StartLevel(_worldNumber, _levelNumber);
     }
 
     public void ReturnToMain()
     {
-        SceneManagerScript.ReturnToMainFromFirst(true);
+        SceneManagerScript.ReturnToMain(true);
     }
 }

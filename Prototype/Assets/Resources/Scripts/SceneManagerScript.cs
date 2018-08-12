@@ -1,5 +1,7 @@
-﻿using System.Collections;
+﻿using Assets.Resources.Scripts.LevelManagement;
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -8,40 +10,115 @@ public class SceneManagerScript : MonoBehaviour {
 
     public static bool IsPaused;
 
+    public static int WorldNumber;
+    public static string MainSceneName;
+
 	// Use this for initialization
 	void Start ()
     {
-        IsPaused = SceneValues.Instance.Paused;
+        IsPaused = GameValues.Instance.Paused;
 
+        var worldValues = GameObject.FindGameObjectWithTag("WorldValues").GetComponent<WorldValues>();
+
+        WorldNumber = worldValues.WorldNumber;
+        GameValues.Instance.CurrentWorldNumber = WorldNumber;
+        MainSceneName = worldValues.MainSceneName;
 	}
 
     public static bool CheckPause()
     {
-        return SceneValues.Instance.Paused;
-    }
-
-    public static bool LevelOneIsComplete()
-    {
-        return SceneValues.Instance.Level1Complete;
+        return GameValues.Instance.Paused;
     }
 
     public static void UpdatePause(bool pauseStatus)
     {
-        SceneValues.Instance.Paused = pauseStatus;
+        GameValues.Instance.Paused = pauseStatus;
     }
 
-    public static void StartScene1()
+    public static void StartLevel(string worldNumber, string levelNumber)
     {
-        SceneManager.LoadScene(2);
+
+        GameValues.Instance.RemainingLivesCurrentLevel = 3;
+        
+        AddOrUpdateLevelRecord(int.Parse(worldNumber), int.Parse(levelNumber));
+
+        var sceneName = GetSceneName(worldNumber, levelNumber);
+
+        SceneManager.LoadScene(sceneName);
     }
 
-    public static void ReturnToMainFromFirst(bool levelComplete)
+    private static void AddOrUpdateLevelRecord(int worldNumber, int levelNumber)
+    {
+
+        var existingRecord = GameValues.Instance.LevelRecords.Where(record => record.WorldNumber == worldNumber && record.LevelNumber == levelNumber).FirstOrDefault();
+
+        if (existingRecord == null)
+        {
+            var levelRecord = new LevelStatus { WorldNumber = worldNumber, LevelNumber = levelNumber, Attempts = 1 };
+
+            GameValues.Instance.LevelRecords.Add(levelRecord);
+        }
+        else
+        {
+            existingRecord.Attempts++;
+        }
+    }
+
+    private static void CompleteLevelRecord()
+    {
+        var sceneName = SceneManager.GetActiveScene().name;
+
+        var levelRecord = GameValues.Instance.LevelRecords.Where(record => record.SceneName == sceneName).FirstOrDefault();
+
+        if (levelRecord != null)
+        {
+            levelRecord.IsComplete = true;
+        }
+    }
+
+    private static string GetSceneName(string worldNumber, string levelNumber)
+    {
+        return $"{worldNumber}-{levelNumber}";
+    }
+
+    public static void ReturnToMain(bool levelComplete)
     {
         if (levelComplete)
         {
-            SceneValues.Instance.Level1Complete = true;
+            CompleteLevelRecord();
         }
 
-        SceneManager.LoadScene(0);
+        SceneManager.LoadScene(MainSceneName);
+    }
+
+    public static void RestartLevel()
+    {
+        GameValues.Instance.RemainingLivesCurrentLevel--;
+
+        var currentScene = SceneManager.GetActiveScene();
+
+        if (GameValues.Instance.RemainingLivesCurrentLevel > 0)
+        {
+            SceneManager.LoadScene(currentScene.buildIndex);
+        }
+        else
+        {
+            ReturnToMain(false);
+        }
+    }
+
+    public static void TurnOnNewPortals()
+    {
+        var levelsToUnlock = GameValues.Instance.LevelRecords.Where(record => record.IsComplete).Select(record => new { LevelNumber = record.LevelNumber + 3 } );
+
+        Debug.Log($"Completed Level Count: {levelsToUnlock.Count()}");
+
+        foreach (var level in levelsToUnlock)
+        {
+            var portalTag = $"Level{level.LevelNumber}";
+            Debug.Log($"PortalTag Is {portalTag}");
+            var portalToFlip = GameObject.FindGameObjectWithTag(portalTag);
+            portalToFlip.GetComponent<LockedPortal>().Unlock();
+        }
     }
 }

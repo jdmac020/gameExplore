@@ -6,6 +6,8 @@ public class Portal : MonoBehaviour
 {
     public string DialogueText;
     public bool IsLocked;
+    public int WorldNumber;
+    public int LevelNumber;
 
     protected GameObject _portal;
 
@@ -14,6 +16,28 @@ public class Portal : MonoBehaviour
     {
         _portal = gameObject;
         SetDialogueText();
+        LevelNumber = GetLevelNumber();
+    }
+
+    protected virtual int GetLevelNumber()
+    {
+        var tag = _portal.tag;
+
+        var tagLength = tag.Length;
+        var lastTwoCharacters = tag.Substring(tagLength - 2);
+        var lastCharacter = tag.Substring(tagLength - 1);
+        int returnValue = 0;
+
+        if (int.TryParse(lastTwoCharacters, out returnValue))
+        {
+            return returnValue;
+        }
+        if (int.TryParse(lastCharacter, out returnValue))
+        {
+            return returnValue;
+        }
+
+        throw new System.ArgumentException($"No Parsable Number Found At The End Of Tag [{tag}]");
     }
 
     /// <summary>

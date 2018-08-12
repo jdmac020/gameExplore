@@ -16,6 +16,8 @@ TagManager:
   - LockedPanel
   - Terrain
   - Enemy
+  - DeathTrigger
+  - WorldValues
   layers:
   - Default
   - TransparentFX

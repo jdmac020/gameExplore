@@ -7,36 +7,46 @@ using System.Linq;
 public class PlayerScript : MonoBehaviour
 {
     public float Speed;
+    public float JumpPower;
 
-    private GameObject _confirmPanel;
-    private GameObject _lockedPanel;
-    private ConfirmBox _lockedBox;
-    private ConfirmBox _confirmBox;
-    private Rigidbody2D _rigidBody;
-    private int _portalTouched = 0;
+    protected GameObject _confirmPanel;
+    protected GameObject _lockedPanel;
+    protected ConfirmBox _lockedBox;
+    protected ConfirmBox _confirmBox;
+    protected Rigidbody2D _rigidBody;
 
     // Use this for initialization
-    void Start()
+    protected virtual void Start()
     {
         _rigidBody = GetComponent<Rigidbody2D>();
 
+        InitializeConfirmBox();
+
+        InitializedLockedConfirmBox();
+
+        SceneManagerScript.TurnOnNewPortals();
+    }
+
+    protected void InitializeConfirmBox()
+    {
         var _confirmPanels = GameObject.FindGameObjectsWithTag("ConfirmPanel");
         _confirmPanel = _confirmPanels.Where(cp => cp.name == "ConfirmPanel").FirstOrDefault();
         _confirmBox = _confirmPanel.GetComponent<ConfirmBox>();
         _confirmBox.InitializeThePanel();
         _confirmBox.DeactivateConfirmBox();
+    }
 
+    protected void InitializedLockedConfirmBox()
+    {
         var _lockedPanels = GameObject.FindGameObjectsWithTag("LockedPanel");
         _lockedPanel = _lockedPanels.Where(lp => lp.name == "LockedPanel").FirstOrDefault();
         _lockedBox = _lockedPanel.GetComponent<ConfirmBox>();
         _lockedBox.InitializeThePanel();
         _lockedBox.DeactivateConfirmBox();
-
-        SwitchAnyCompletedPortals();
     }
 
     // Update is called once per frame
-    void FixedUpdate()
+    protected virtual void FixedUpdate()
     {
         var isPaused = SceneManagerScript.CheckPause();
 
@@ -50,35 +60,25 @@ public class PlayerScript : MonoBehaviour
             _rigidBody.AddForce(movement * Speed);
         }
 
-        SceneManagerScript.CheckPause();
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
+    protected virtual void OnTriggerEnter2D(Collider2D collision)
     {
         var gameObj = collision.gameObject;
 
         if (gameObj.layer == 9)
         {
-            var displayText = gameObj.GetComponent<Portal>().DialogueText;
-            var isLocked = gameObj.GetComponent<Portal>().IsLocked;
-            //trigger dialogue
-            ActivateConfirmBox(displayText, isLocked);
+            var portal = gameObj.GetComponent<Portal>();
+            var displayText = portal.DialogueText;
+            var isLocked = portal.IsLocked;
+            var world = portal.WorldNumber;
+            var level = portal.LevelNumber;
 
-            //_portalTouched = GetTagNumber(gameObj.tag);
-            //// will happen after successful completion, in the live run
-            //if (_portalTouched < 4)
-            //    SwitchOnPortal(_portalTouched);
+            ActivateLevelConfirmBox(displayText, isLocked, world.ToString(), level.ToString());
         }
     }
 
-    private string GetDisplayText(GameObject gameObj)
-    {
-        var portalScript = gameObj.GetComponent<Portal>();
-
-        return portalScript.DialogueText;
-    }
-
-    private void ActivateConfirmBox(string displayText, bool isLocked)
+    private void ActivateLevelConfirmBox(string displayText, bool isLocked, string worldNumber, string levelNumber)
     {
         if (isLocked)
         {
@@ -86,46 +86,8 @@ public class PlayerScript : MonoBehaviour
         }
         else
         {
-            _confirmBox.ActivateConfirmBox(displayText);
+            _confirmBox.ActivateConfirmBox(displayText, worldNumber, levelNumber);
         }
-    }
-
-    private void SwitchAnyCompletedPortals()
-    {
-        Debug.Log(SceneManagerScript.LevelOneIsComplete());
-
-        if (SceneManagerScript.LevelOneIsComplete())
-        {
-            SwitchOnPortal(1);
-        }
-    }
-
-    private void SwitchOnPortal(int tagNumber)
-    {
-        var portalTag = $"Level{tagNumber + 3}";
-        var portalToFlip = GameObject.FindGameObjectWithTag(portalTag);
-        Debug.Log(portalToFlip);
-        var script = portalToFlip.GetComponent<LockedPortal>();
-        script.Unlock();
-    }
-
-    private int GetTagNumber(string tag)
-    {
-        var tagLength = tag.Length;
-        var lastTwoCharacters = tag.Substring(tagLength - 2);
-        var lastCharacter = tag.Substring(tagLength - 1);
-        int returnValue = 0;
-
-        if (int.TryParse(lastTwoCharacters, out returnValue))
-        {
-            return returnValue;
-        }
-        if (int.TryParse(lastCharacter, out returnValue))
-        {
-            return returnValue;
-        }
-
-        throw new System.ArgumentException($"No Parsable Number Found At The End Of Tag [{tag}]");
     }
 
 }
