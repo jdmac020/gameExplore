@@ -9,16 +9,17 @@ public class LockedPortal : Portal
     private Animator _animator;
 
 	// Use this for initialization
-	protected override void Start ()
+	protected void Awake ()
     {
         IsLocked = true;
         base.Start();
         _animator = _portal.GetComponent<Animator>();
         
 	}
-    
-	// Update is called once per frame
-	void Update () {
+
+    // Update is called once per frame
+    void Update ()
+    {
 		
 	}
 
@@ -27,6 +28,8 @@ public class LockedPortal : Portal
     /// </summary>
     public void Unlock()
     {
+        Debug.Log($"We're in 'Unlock()' and the locked value is {IsLocked}");
+
         if (IsLocked)
         {
             IsLocked = false;

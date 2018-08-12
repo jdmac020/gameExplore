@@ -15,6 +15,7 @@ TagManager:
   - ConfirmPanel
   - LockedPanel
   - Terrain
+  - Enemy
   layers:
   - Default
   - TransparentFX
@@ -26,9 +27,9 @@ TagManager:
   - 
   - Player
   - Portal
-  - 
-  - 
-  - 
+  - Background
+  - StaticBlocking
+  - Enemy
   - 
   - 
   - 

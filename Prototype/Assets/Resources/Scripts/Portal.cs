@@ -19,7 +19,7 @@ public class Portal : MonoBehaviour
     /// <summary>
     /// Sets the dialogue text based on the portal's tag
     /// </summary>
-    protected void SetDialogueText()
+    protected virtual void SetDialogueText()
     {
 
         if (IsLocked)

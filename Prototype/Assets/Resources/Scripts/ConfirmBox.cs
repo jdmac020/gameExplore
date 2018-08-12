@@ -33,6 +33,12 @@ public class ConfirmBox : MonoBehaviour
 
     public void EnterChallenge1()
     {
+        SceneManagerScript.UpdatePause(false);
         SceneManagerScript.StartScene1();
+    }
+
+    public void ReturnToMain()
+    {
+        SceneManagerScript.ReturnToMainFromFirst(true);
     }
 }

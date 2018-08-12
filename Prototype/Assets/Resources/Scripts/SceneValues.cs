@@ -7,6 +7,7 @@ public class SceneValues : MonoBehaviour {
     public static SceneValues Instance { get; private set; }
 
     public bool Paused;
+    public bool Level1Complete;
 
     private void Awake()
     {

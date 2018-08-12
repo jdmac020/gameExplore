@@ -12,11 +12,17 @@ public class SceneManagerScript : MonoBehaviour {
 	void Start ()
     {
         IsPaused = SceneValues.Instance.Paused;
+
 	}
 
-    public static void CheckPause()
+    public static bool CheckPause()
     {
-        IsPaused = SceneValues.Instance.Paused;
+        return SceneValues.Instance.Paused;
+    }
+
+    public static bool LevelOneIsComplete()
+    {
+        return SceneValues.Instance.Level1Complete;
     }
 
     public static void UpdatePause(bool pauseStatus)
@@ -26,6 +32,16 @@ public class SceneManagerScript : MonoBehaviour {
 
     public static void StartScene1()
     {
-        SceneManager.LoadScene(1);
+        SceneManager.LoadScene(2);
+    }
+
+    public static void ReturnToMainFromFirst(bool levelComplete)
+    {
+        if (levelComplete)
+        {
+            SceneValues.Instance.Level1Complete = true;
+        }
+
+        SceneManager.LoadScene(0);
     }
 }

@@ -8,14 +8,14 @@ public class TextManager : MonoBehaviour {
     public Text _textBox;
 
 	// Use this for initialization
-	void Start () {
-        _textBox = GetComponent<Text>(); 
+	void Awake ()
+    {
+        _textBox = GetComponent<Text>();
         _textBox.text = string.Empty;
 	}
 
     public void ChangeText(string textToUse)
     {
-
         _textBox.text = textToUse;
     }
 }
