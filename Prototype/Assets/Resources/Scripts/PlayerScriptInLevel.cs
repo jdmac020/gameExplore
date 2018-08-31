@@ -6,7 +6,7 @@ using System.Linq;
 
 public class PlayerScriptInLevel : PlayerScript
 {
-    //public bool HitEnemy;
+    public bool HitEnemy;
     public LayerMask GroundLayer;
     public bool _isGrounded = true;
 
@@ -117,9 +117,21 @@ public class PlayerScriptInLevel : PlayerScript
 
         if (gameObj.tag == "Enemy" && colliderType == typeof(CircleCollider2D))
         {
-            CurrentHitPoints--;
-            UpdateHitPoints();
-            Debug.Log($"Hit Points Now {CurrentHitPoints}");
+
+            if (HitEnemy)
+            {
+                HitEnemy = false;
+            }
+            else
+            {
+                CurrentHitPoints--;
+                UpdateHitPoints();
+                Debug.Log($"Hit Points Now {CurrentHitPoints}");
+                HitEnemy = true;
+            }
+
+
+            
             //HitEnemy = true;
             //gameObj.SetActive(false);
             //HitEnemy = false;
