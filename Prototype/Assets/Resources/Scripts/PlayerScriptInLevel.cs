@@ -6,12 +6,16 @@ using System.Linq;
 
 public class PlayerScriptInLevel : PlayerScript
 {
-    public bool HitEnemy;
+    //public bool HitEnemy;
     public LayerMask GroundLayer;
     public bool _isGrounded = true;
 
+    public int CurrentHitPoints;
+    public int MaxHitPoints;
+
     private GameObject _returnPortal;
     private TextManager _livesText;
+    private TextManager _hitPointsText;
     
 
     // Use this for initialization
@@ -26,6 +30,22 @@ public class PlayerScriptInLevel : PlayerScript
         InitializeConfirmBox();
 
         UpdateLives();
+        UpdateHitPoints();
+    }
+
+    protected void UpdateHitPoints()
+    {
+        if (_hitPointsText == null)
+        {
+            _hitPointsText = GameObject.FindGameObjectWithTag("HUD_HitPointsText").GetComponent<TextManager>();
+        }
+
+        _hitPointsText.ChangeText($"Hit Points: {CurrentHitPoints}/{MaxHitPoints}");
+
+        if (CurrentHitPoints <= 0)
+        {
+            SceneManagerScript.RestartLevel();
+        }
     }
 
     protected void UpdateLives()
@@ -38,13 +58,15 @@ public class PlayerScriptInLevel : PlayerScript
         var livesRemaining = SceneManagerScript.RemainingLives;
 
         _livesText.ChangeText(livesRemaining.ToString());
+
+        
     }
 
     // Update is called once per frame
     protected override void FixedUpdate()
     {
         var isPaused = SceneManagerScript.CheckPause();
-
+        
         CheckGround();
 
         if (!isPaused)
@@ -82,6 +104,7 @@ public class PlayerScriptInLevel : PlayerScript
     protected override void OnTriggerEnter2D(Collider2D collision)
     {
         var gameObj = collision.gameObject;
+        var colliderType = collision.GetType();
 
         if (gameObj.layer == 9)
         {
@@ -92,13 +115,16 @@ public class PlayerScriptInLevel : PlayerScript
             ActivateConfirmBox(displayText);
         }
 
-        if (gameObj.tag == "Enemy")
+        if (gameObj.tag == "Enemy" && colliderType == typeof(CircleCollider2D))
         {
-            HitEnemy = true;
-            gameObj.SetActive(false);
-            HitEnemy = false;
+            CurrentHitPoints--;
+            UpdateHitPoints();
+            Debug.Log($"Hit Points Now {CurrentHitPoints}");
+            //HitEnemy = true;
+            //gameObj.SetActive(false);
+            //HitEnemy = false;
 
-            _returnPortal.SetActive(true);
+            //_returnPortal.SetActive(true);
         }
 
         if (gameObj.tag == "DeathTrigger")
