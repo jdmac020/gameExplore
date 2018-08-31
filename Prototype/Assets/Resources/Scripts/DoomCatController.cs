@@ -5,7 +5,7 @@ using UnityEngine;
 public class DoomCatController : MonoBehaviour
 {
     public float Speed;
-    public float AttackRange;
+    public float DetectRange;
 
     protected GameObject _playerTarget;
     protected Rigidbody2D _rigidBody;
@@ -36,7 +36,7 @@ public class DoomCatController : MonoBehaviour
         Debug.Log($"Enemy is moving left: {_isMovingLeft}");
         Debug.Log($"Distance to Player Is: {_distanceToPlayer}");
 
-        if (_distanceToPlayer <= AttackRange)
+        if (_distanceToPlayer <= DetectRange)
         {
             ChaseIsAfoot();
         }

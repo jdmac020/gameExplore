@@ -49,6 +49,7 @@ public class PlayerScriptInLevel : PlayerScript
             //_rigidBody.velocity = new Vector2(movementSpeed, _rigidBody.velocity.x);
 
             _rigidBody.AddForce(movement * Speed);
+            //_rigidBody.MovePosition(movement);
         }
     }
 

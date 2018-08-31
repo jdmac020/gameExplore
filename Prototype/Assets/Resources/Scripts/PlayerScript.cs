@@ -57,6 +57,8 @@ public class PlayerScript : MonoBehaviour
 
             var movement = new Vector2(moveHorizontal, moveVertical);
 
+            //_rigidBody.MovePosition(movement);
+
             _rigidBody.AddForce(movement * Speed);
         }
 
