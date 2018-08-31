@@ -32,9 +32,9 @@ public class DoomCatController : MonoBehaviour
     {
         UpdatePositions();
 
-        Debug.Log($"Player is to the left: {_isPlayerToLeft}");
-        Debug.Log($"Enemy is moving left: {_isMovingLeft}");
-        Debug.Log($"Distance to Player Is: {_distanceToPlayer}");
+        //Debug.Log($"Player is to the left: {_isPlayerToLeft}");
+        //Debug.Log($"Enemy is moving left: {_isMovingLeft}");
+        //Debug.Log($"Distance to Player Is: {_distanceToPlayer}");
 
         if (_distanceToPlayer <= DetectRange)
         {

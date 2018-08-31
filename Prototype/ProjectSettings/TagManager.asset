@@ -18,6 +18,7 @@ TagManager:
   - Enemy
   - DeathTrigger
   - WorldValues
+  - HUD_LivesText
   layers:
   - Default
   - TransparentFX

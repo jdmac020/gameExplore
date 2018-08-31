@@ -11,16 +11,33 @@ public class PlayerScriptInLevel : PlayerScript
     public bool _isGrounded = true;
 
     private GameObject _returnPortal;
+    private TextManager _livesText;
+    
 
     // Use this for initialization
     protected override void Start()
     {
+
         _rigidBody = GetComponent<Rigidbody2D>();
 
         _returnPortal = GameObject.FindGameObjectWithTag("Finish");
         _returnPortal.SetActive(false);
 
         InitializeConfirmBox();
+
+        UpdateLives();
+    }
+
+    protected void UpdateLives()
+    {
+        if (_livesText == null)
+        {
+            _livesText = GameObject.FindGameObjectWithTag("HUD_LivesText").GetComponent<TextManager>();
+        }
+
+        var livesRemaining = SceneManagerScript.RemainingLives;
+
+        _livesText.ChangeText(livesRemaining.ToString());
     }
 
     // Update is called once per frame
