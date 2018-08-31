@@ -13,6 +13,8 @@ public class SceneManagerScript : MonoBehaviour {
     public static int WorldNumber;
     public static string MainSceneName;
 
+    public static int RemainingLives { get { return GameValues.Instance.RemainingLivesCurrentLevel; } }
+
 	// Use this for initialization
 	void Start ()
     {
@@ -94,7 +96,7 @@ public class SceneManagerScript : MonoBehaviour {
     public static void RestartLevel()
     {
         GameValues.Instance.RemainingLivesCurrentLevel--;
-
+        
         var currentScene = SceneManager.GetActiveScene();
 
         if (GameValues.Instance.RemainingLivesCurrentLevel > 0)
