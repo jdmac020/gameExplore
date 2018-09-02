@@ -119,11 +119,11 @@ public class PlayerScriptInLevel : PlayerScript
 
                 if (FacingRight)
                 {
-                    cureStrike = Physics2D.Raycast(thisVector, Vector2.right);
+                    cureStrike = Physics2D.Raycast(thisVector, Vector2.right, 1);
                 }
                 else
                 {
-                    cureStrike = Physics2D.Raycast(thisVector, Vector2.left);
+                    cureStrike = Physics2D.Raycast(thisVector, Vector2.left, 1);
                 }
 
                 //int layerMask = ~(1 << 8);
