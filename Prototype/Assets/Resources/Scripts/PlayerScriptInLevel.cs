@@ -113,20 +113,31 @@ public class PlayerScriptInLevel : PlayerScript
             {
                 Debug.Log("Shoot the 'Laser'!");
 
+                RaycastHit2D cureStrike = new RaycastHit2D();
+
                 var thisVector = new Vector2(_rigidBody.transform.position.x, _rigidBody.transform.position.y - .13f);
-                var rightVector = new Vector2(15,0);
 
-                int layerMask = ~(1 << 8);
+                if (FacingRight)
+                {
+                    cureStrike = Physics2D.Raycast(thisVector, Vector2.right);
+                }
+                else
+                {
+                    cureStrike = Physics2D.Raycast(thisVector, Vector2.left);
+                }
 
-                var hit = Physics2D.Raycast(thisVector, Vector2.right);
+                //int layerMask = ~(1 << 8);
                 
-                if (hit.collider == null)
+                if (cureStrike.collider == null)
                 {
                     Debug.Log($"We hit nothing, Lebowski!");
                 }
                 else
                 {
-                    Debug.Log($"We hit {hit.rigidbody.tag}");
+                    Debug.Log($"We hit {cureStrike.collider.gameObject.name}");
+                    var script = cureStrike.collider.gameObject.GetComponent<DoomCatController>();
+                    Debug.Log(script);
+                    script.UpdateCurePoints();
                 }
                 
             }

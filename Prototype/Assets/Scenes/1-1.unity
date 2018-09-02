@@ -229,6 +229,7 @@ MonoBehaviour:
   Speed: 1
   DetectRange: 1
   BackUpPoint: 0.16
+  CurePoints: 5
 --- !u!58 &70233230
 CircleCollider2D:
   m_ObjectHideFlags: 0

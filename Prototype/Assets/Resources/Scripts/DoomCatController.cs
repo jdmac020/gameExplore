@@ -7,6 +7,7 @@ public class DoomCatController : MonoBehaviour
     public float Speed;
     public float DetectRange;
     public float BackUpPoint;
+    public int CurePoints;
 
     protected GameObject _playerTarget;
     protected Rigidbody2D _rigidBody;
@@ -33,6 +34,11 @@ public class DoomCatController : MonoBehaviour
 	// Update is called once per frame
 	void Update ()
     {
+        if (CurePoints == 0)
+        {
+            _rigidBody.gameObject.SetActive(false);
+        }
+
         UpdatePositions();
 
         //Debug.Log($"Player X: {_playerX}");
@@ -51,6 +57,16 @@ public class DoomCatController : MonoBehaviour
         }
         
 
+    }
+
+    public void UpdateCurePoints()
+    {
+        if (CurePoints > 0)
+        {
+            CurePoints--;
+            Debug.Log($"Cure Points Left: {CurePoints}");
+        }
+        
     }
 
     protected void BackAway()
