@@ -60,43 +60,43 @@ public class PlayerScriptInLevel : PlayerScript
 
         _livesText.ChangeText(livesRemaining.ToString());
 
-        
+
     }
 
     // Update is called once per frame
     protected override void FixedUpdate()
     {
         var isPaused = SceneManagerScript.CheckPause();
-        
+
         CheckGround();
 
         if (!isPaused)
         {
             var moveHorizontal = Input.GetAxis("Horizontal");
-            Debug.Log($"Last Horizontal: {moveHorizontal}");
+            //Debug.Log($"Last Horizontal: {moveHorizontal}");
             var debugMessage = string.Empty;
 
             if (moveHorizontal > 0 && !FacingRight)
             {
                 FacingRight = true;
-                
+
             }
             else if (moveHorizontal < 0 && FacingRight)
             {
                 FacingRight = false;
-                
+
             }
 
-            if (FacingRight)
-            {
-                debugMessage = "I am facing Right!";
-            }
-            else
-            {
-                debugMessage = "I am Facing Left!";
-            }
+            //if (FacingRight)
+            //{
+            //    debugMessage = "I am facing Right!";
+            //}
+            //else
+            //{
+            //    debugMessage = "I am Facing Left!";
+            //}
 
-            Debug.Log(debugMessage);
+            //Debug.Log(debugMessage);
 
             var moveVertical = 0;// Input.GetAxis("Vertical");
 
@@ -112,6 +112,23 @@ public class PlayerScriptInLevel : PlayerScript
             if (Input.GetKeyDown(KeyCode.H))
             {
                 Debug.Log("Shoot the 'Laser'!");
+
+                var thisVector = new Vector2(_rigidBody.transform.position.x, _rigidBody.transform.position.y - .13f);
+                var rightVector = new Vector2(15,0);
+
+                int layerMask = ~(1 << 8);
+
+                var hit = Physics2D.Raycast(thisVector, Vector2.right);
+                
+                if (hit.collider == null)
+                {
+                    Debug.Log($"We hit nothing, Lebowski!");
+                }
+                else
+                {
+                    Debug.Log($"We hit {hit.rigidbody.tag}");
+                }
+                
             }
 
             //_rigidBody.AddForce(new Vector2(movementSpeed, _rigidBody.velocity.x));
@@ -162,7 +179,7 @@ public class PlayerScriptInLevel : PlayerScript
             }
 
 
-            
+
             //HitEnemy = true;
             //gameObj.SetActive(false);
             //HitEnemy = false;
@@ -178,9 +195,11 @@ public class PlayerScriptInLevel : PlayerScript
 
     private void OnDrawGizmos()
     {
-        Gizmos.color = new Color(0, 1, 0, .5f);
-        Gizmos.DrawCube(new Vector2(transform.position.x, transform.position.y - .29f),
-            new Vector2(.01f, .01f));
+        Gizmos.DrawRay(new Vector2(_rigidBody.transform.position.x, _rigidBody.transform.position.y - .13f), Vector2.right);
+
+        //Gizmos.color = new Color(0, 1, 0, .5f);
+        //Gizmos.DrawCube(new Vector2(transform.position.x, transform.position.y - .29f),
+        //    new Vector2(.01f, .01f));
     }
 
     private void ActivateConfirmBox(string displayText)

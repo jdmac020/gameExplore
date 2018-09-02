@@ -39,7 +39,7 @@ public class DoomCatController : MonoBehaviour
         //Debug.Log($"This X: {_thisX}");
         //Debug.Log($"Player is to the left: {_isPlayerToLeft}");
         //Debug.Log($"Enemy is moving left: {_isMovingLeft}");
-        Debug.Log($"Distance to Player Is: {_distanceToPlayer}");
+        //Debug.Log($"Distance to Player Is: {_distanceToPlayer}");
 
         if (_distanceToPlayer <= BackUpPoint)
         {
