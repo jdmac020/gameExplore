@@ -8,7 +8,7 @@ public class PlayerScriptInLevel : PlayerScript
 {
     public bool HitEnemy;
     public LayerMask GroundLayer;
-    public bool _isGrounded = true;
+    public bool FacingRight = true;
 
     public int CurrentHitPoints;
     public int MaxHitPoints;
@@ -16,7 +16,8 @@ public class PlayerScriptInLevel : PlayerScript
     private GameObject _returnPortal;
     private TextManager _livesText;
     private TextManager _hitPointsText;
-    
+
+    private bool _isGrounded = true;
 
     // Use this for initialization
     protected override void Start()
@@ -72,6 +73,31 @@ public class PlayerScriptInLevel : PlayerScript
         if (!isPaused)
         {
             var moveHorizontal = Input.GetAxis("Horizontal");
+            Debug.Log($"Last Horizontal: {moveHorizontal}");
+            var debugMessage = string.Empty;
+
+            if (moveHorizontal > 0 && !FacingRight)
+            {
+                FacingRight = true;
+                
+            }
+            else if (moveHorizontal < 0 && FacingRight)
+            {
+                FacingRight = false;
+                
+            }
+
+            if (FacingRight)
+            {
+                debugMessage = "I am facing Right!";
+            }
+            else
+            {
+                debugMessage = "I am Facing Left!";
+            }
+
+            Debug.Log(debugMessage);
+
             var moveVertical = 0;// Input.GetAxis("Vertical");
 
             //var movementSpeed = Mathf.Lerp(_rigidBody.velocity.x, Input.GetAxis("Horizontal") * Speed * Time.deltaTime, Time.deltaTime * 10); //new Vector2(moveHorizontal, moveVertical);
@@ -81,6 +107,11 @@ public class PlayerScriptInLevel : PlayerScript
             {
                 _rigidBody.AddForce(new Vector2(0, 15), ForceMode2D.Impulse);
                 _isGrounded = false;
+            }
+
+            if (Input.GetKeyDown(KeyCode.H))
+            {
+                Debug.Log("Shoot the 'Laser'!");
             }
 
             //_rigidBody.AddForce(new Vector2(movementSpeed, _rigidBody.velocity.x));
