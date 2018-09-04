@@ -17,12 +17,6 @@ public class LockedPortal : Portal
         
 	}
 
-    // Update is called once per frame
-    void Update ()
-    {
-		
-	}
-
     /// <summary>
     /// Called from the player script (maybe) after completing an earlier portal's challenge to unlock the portal
     /// </summary>

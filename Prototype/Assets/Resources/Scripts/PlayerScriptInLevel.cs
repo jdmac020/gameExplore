@@ -13,9 +13,19 @@ public class PlayerScriptInLevel : PlayerScript
     public int CurrentHitPoints;
     public int MaxHitPoints;
 
+    private SpriteRenderer _sprite;
+
+    private GameObject _cureRayLeft;
+    private GameObject _beamLeft;
+    private GameObject _cureRayRight;
+    private GameObject _beamRight;
+    private bool _rayFiring = false;
+    private int _fireCounter;
+
     private GameObject _returnPortal;
     private TextManager _livesText;
     private TextManager _hitPointsText;
+    private HitPointScript _hitPointHearts;
 
     private bool _isGrounded = true;
 
@@ -24,9 +34,25 @@ public class PlayerScriptInLevel : PlayerScript
     {
 
         _rigidBody = GetComponent<Rigidbody2D>();
+        _sprite = GetComponent<SpriteRenderer>();
 
         _returnPortal = GameObject.FindGameObjectWithTag("Finish");
         _returnPortal.SetActive(false);
+
+        _cureRayLeft = GameObject.Find("ToolSpotL");
+        _beamLeft = GameObject.Find("CureBeamL");
+        _beamLeft.SetActive(false);
+        _cureRayLeft.SetActive(false);
+
+        _cureRayRight = GameObject.Find("ToolSpotR");
+        _beamRight = GameObject.Find("CureBeamR");
+        _beamRight.SetActive(false);
+
+
+        //_cureRayActive = _cureRayRight;
+        //_beamActive = _beamRight;
+        //_beamRight.SetActive(false);
+        //_beamActive.SetActive(false);
 
         InitializeConfirmBox();
 
@@ -38,15 +64,18 @@ public class PlayerScriptInLevel : PlayerScript
     {
         if (_hitPointsText == null)
         {
-            _hitPointsText = GameObject.FindGameObjectWithTag("HUD_HitPointsText").GetComponent<TextManager>();
+            //_hitPointsText = GameObject.FindGameObjectWithTag("HUD_HitPointsText").GetComponent<TextManager>();
+            _hitPointHearts = GameObject.Find("HitPointHearts").GetComponent<HitPointScript>();
         }
 
-        _hitPointsText.ChangeText($"Hit Points: {CurrentHitPoints}/{MaxHitPoints}");
+        //_hitPointsText.ChangeText($"Hit Points: {CurrentHitPoints}/{MaxHitPoints}");
 
         if (CurrentHitPoints <= 0)
         {
             SceneManagerScript.RestartLevel();
         }
+
+        _hitPointHearts.UpdateHitHearts(CurrentHitPoints);
     }
 
     protected void UpdateLives()
@@ -68,6 +97,19 @@ public class PlayerScriptInLevel : PlayerScript
     {
         var isPaused = SceneManagerScript.CheckPause();
 
+        ReturnEnableCheck();
+
+        if (_rayFiring && _fireCounter < 2)
+        {
+            _fireCounter++;
+        }
+        else if (_rayFiring && _fireCounter >= 2)
+        {
+            SwitchBeam(false);
+            _rayFiring = false;
+            _fireCounter = 0;
+        }
+
         CheckGround();
 
         if (!isPaused)
@@ -79,12 +121,15 @@ public class PlayerScriptInLevel : PlayerScript
             if (moveHorizontal > 0 && !FacingRight)
             {
                 FacingRight = true;
-
+                _cureRayRight.SetActive(true);
+                _cureRayLeft.SetActive(false);
+                
             }
             else if (moveHorizontal < 0 && FacingRight)
             {
                 FacingRight = false;
-
+                _cureRayLeft.SetActive(true);
+                _cureRayRight.SetActive(false);
             }
 
             //if (FacingRight)
@@ -109,9 +154,13 @@ public class PlayerScriptInLevel : PlayerScript
                 _isGrounded = false;
             }
 
-            if (Input.GetKeyDown(KeyCode.H))
+            if (Input.GetKeyDown(KeyCode.H) && _fireCounter == 0)
             {
                 Debug.Log("Shoot the 'Laser'!");
+
+                SwitchBeam(true);
+
+                _rayFiring = true;
 
                 RaycastHit2D cureStrike = new RaycastHit2D();
 
@@ -119,6 +168,7 @@ public class PlayerScriptInLevel : PlayerScript
 
                 if (FacingRight)
                 {
+
                     cureStrike = Physics2D.Raycast(thisVector, Vector2.right, 1);
                 }
                 else
@@ -127,7 +177,7 @@ public class PlayerScriptInLevel : PlayerScript
                 }
 
                 //int layerMask = ~(1 << 8);
-                
+
                 if (cureStrike.collider == null)
                 {
                     Debug.Log($"We hit nothing, Lebowski!");
@@ -139,7 +189,8 @@ public class PlayerScriptInLevel : PlayerScript
                     Debug.Log(script);
                     script.UpdateCurePoints();
                 }
-                
+
+
             }
 
             //_rigidBody.AddForce(new Vector2(movementSpeed, _rigidBody.velocity.x));
@@ -148,6 +199,42 @@ public class PlayerScriptInLevel : PlayerScript
 
             _rigidBody.AddForce(movement * Speed);
             //_rigidBody.MovePosition(movement);
+        }
+    }
+
+    private void SwitchBeam(bool beamOn)
+    {
+        if (_cureRayRight.activeSelf)
+        {
+            _beamRight.SetActive(beamOn);
+        }
+        else
+        {
+            _beamLeft.SetActive(beamOn);
+        }
+    }
+
+    private void ReturnEnableCheck()
+    {
+        var enemies = GameObject.FindGameObjectsWithTag("Enemy");
+
+        Debug.Log($"Found {enemies.Length} Enemies!");
+
+        var activeEnemies = 0;
+
+        foreach (var enemy in enemies)
+        {
+            if (enemy.activeSelf)
+            {
+                activeEnemies++;
+            }
+        }
+
+        Debug.Log($"Found {activeEnemies} active enemies!");
+
+        if (activeEnemies == 0)
+        {
+            _returnPortal.SetActive(true);
         }
     }
 
