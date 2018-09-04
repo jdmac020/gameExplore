@@ -20,6 +20,10 @@ TagManager:
   - WorldValues
   - HUD_LivesText
   - HUD_HitPointsText
+  - CureRayLeft
+  - CureBeamLeft
+  - CureBeamRight
+  - CureRayRight
   layers:
   - Default
   - TransparentFX
